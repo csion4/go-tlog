@@ -1,4 +1,4 @@
-module com.csion/tlog
+module github.com/csion4/go-tlog
 
 go 1.16
 
