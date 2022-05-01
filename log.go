@@ -24,7 +24,7 @@ func init() {
 	err := loadConf()
 	formatAnalysis(viper.GetString("tlog.format"))
 	if err != nil {
-		sol.warn(fmt.Sprintln("tLog配置文件加载异常：", *err, "，启用默认配置"), time.Now(), "")
+		sol.warn(fmt.Sprintln("【TLog msg】tLog配置文件加载异常：", *err, "，启用默认配置"), time.Now(), "")
 	}
 
 	tlogOut := viper.GetString("tlog.out")
@@ -136,7 +136,7 @@ func switchLevel(l string) int {
 	case "error":
 		return Error
 	default:
-		sol.warn(fmt.Sprintln("未知的日志输出级别：", l , "，启用默认配置"), time.Now(), "")
+		sol.warn(fmt.Sprintln("【TLog msg】未知的日志输出级别：", l , "，启用默认配置"), time.Now(), "")
 		return Info
 	}
 }
@@ -153,7 +153,7 @@ func registerOuts(outs []string, tl *TLogger) {
 			break
 		default:
 			// 对于其他logger待补充
-			sol.warn(fmt.Sprintln("暂不支持logger类型：", out), time.Now(), "")
+			sol.warn(fmt.Sprintln("【TLog msg】暂不支持logger类型：", out), time.Now(), "")
 			break
 		}
 	}

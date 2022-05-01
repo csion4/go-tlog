@@ -1,7 +1,7 @@
 package main
 
 import (
-	tLog "com.csion/tlog"
+	tLog "github.com/csion4/go-tlog"
 )
 
 func main() {
