@@ -2,6 +2,7 @@
 # 1，简介
 golang实现的日志组件，类似于log4j，支持配置多种日志级别和输出方式；
 # 2，配置文件
+在项目中新建config/tlog.yml配置文件：
 ```
 tlog:
      out:  file, console # 输出
