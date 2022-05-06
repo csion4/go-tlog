@@ -223,7 +223,7 @@ func (fo *fileOutLogger) clearFile() {
 func (fo *fileOutLogger) trace(v string, t time.Time, h string) string  {
 	if fo.level <= Trace {
 		if h == "" {
-			h = formatHeader(t, "trace")
+			h = formatHeader(t, "trace", "")
 		}
 		fo.writeFileLog(h + v)
 	}
@@ -232,7 +232,7 @@ func (fo *fileOutLogger) trace(v string, t time.Time, h string) string  {
 func (fo *fileOutLogger) debug(v string, t time.Time, h string) string {
 	if fo.level <= Debug {
 		if h == "" {
-			h = formatHeader(t, "debug")
+			h = formatHeader(t, "debug", "")
 		}
 		fo.writeFileLog(h + v)
 	}
@@ -241,7 +241,7 @@ func (fo *fileOutLogger) debug(v string, t time.Time, h string) string {
 func (fo *fileOutLogger) info(v string, t time.Time, h string) string {
 	if fo.level <= Info {
 		if h == "" {
-			h = formatHeader(t, "info")
+			h = formatHeader(t, "info", "")
 		}
 		fo.writeFileLog(h + v)
 	}
@@ -250,7 +250,7 @@ func (fo *fileOutLogger) info(v string, t time.Time, h string) string {
 func (fo *fileOutLogger) warn(v string, t time.Time, h string) string  {
 	if fo.level <= Warn {
 		if h == "" {
-			h = formatHeader(t, "warn")
+			h = formatHeader(t, "warn", "")
 		}
 		fo.writeFileLog(h + v)
 	}
@@ -259,7 +259,7 @@ func (fo *fileOutLogger) warn(v string, t time.Time, h string) string  {
 func (fo *fileOutLogger) error(v string, t time.Time, h string) string  {
 	if fo.level <= Error {
 		if h == "" {
-			h = formatHeader(t, "error")
+			h = formatHeader(t, "error", "")
 		}
 		fo.writeFileLog(h + v)
 	}

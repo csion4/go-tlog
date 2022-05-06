@@ -22,7 +22,7 @@ var sol = &stdOutLogger{stdLogger: &stdLogger{level: Info}}
 
 func init() {
 	err := loadConf()
-	formatAnalysis(viper.GetString("tlog.format"))
+	format = formatAnalysis(viper.GetString("tlog.format"))
 	if err != nil {
 		sol.warn(fmt.Sprintln("【TLog msg】tLog配置文件加载异常：", *err, "，启用默认配置"), time.Now(), "")
 	}
@@ -88,7 +88,7 @@ func getTlogConf() map[string]map[string]string {
 }
 
 // "%d%t%m [%l] %f"  有意义字母：d t m l f
-func formatAnalysis(f string){
+func formatAnalysis(f string) (format []string){
 	if f == "" {
 		f = defaultFormat
 	}
@@ -111,6 +111,7 @@ func formatAnalysis(f string){
 			format = append(format, "%" + string(b))
 		}
 	}
+	return
 }
 
 // 全局默认level
@@ -141,6 +142,23 @@ func switchLevel(l string) int {
 	}
 }
 
+func switchLevelI(l int) string {
+	switch l {
+	case 1:
+		return "trace"
+	case 2:
+		return "debug"
+	case 3:
+		return "info"
+	case 4:
+		return "warn"
+	case 5:
+		return "error"
+	default:
+		return "info"
+	}
+}
+
 // 注册logger
 func registerOuts(outs []string, tl *TLogger) {
 	for _, out := range outs {
@@ -160,10 +178,16 @@ func registerOuts(outs []string, tl *TLogger) {
 }
 
 // "%d%t%m [%l] %f"  有意义字母：d t l m f  todo：这里存在bug
-func formatHeader(t time.Time, level string) string {
+func formatHeader(t time.Time, level string, f string) string {
+	var f0 []string
+	if f != "" {
+		f0 = formatAnalysis(f)
+	} else {
+		f0 = format
+	}
 	var s strings.Builder
 	var temp string
-	for _, f := range format {
+	for _, f := range f0 {
 		switch f {
 		case "d":
 			temp += "2006-01-02"
@@ -196,6 +220,9 @@ func formatHeader(t time.Time, level string) string {
 			}
 			s.WriteString(f)
 		}
+	}
+	if temp != "" {
+		s.WriteString(t.Format(temp))
 	}
 	s.WriteString(": ")
 	return s.String()
@@ -247,4 +274,71 @@ func (l *TLogger) Error(v ...interface{}) {
 	}
 }
 
+// golang 不支持方法的重载
+func (l *TLogger) Panic1(v ...interface{}) {
+	s := fmt.Sprintln(v...)
+	if s != "" {
+		t := time.Now()
+		var header string
+		for _, r := range l.register {
+			header = r.error(s, t, header)
+		}
+		panic(v)
+	}
+}
 
+func (l *TLogger) Panic2(s string, err error) {
+	if err != nil {
+		v := fmt.Sprintln(s, err)
+		t := time.Now()
+		var header string
+		for _, r := range l.register {
+			header = r.error(v, t, header)
+		}
+		panic(v)
+	}
+}
+
+func (l *TLogger) Panic3(err error) {
+	if err != nil {
+		t := time.Now()
+		var header string
+		for _, r := range l.register {
+			header = r.error(fmt.Sprintln(err), t, header)
+		}
+		panic(err)
+	}
+}
+
+// ------- 定制格式，用于和其他框架适配 --------
+func (l *TLogger) Customize(level int, format string, v ...interface{}) {
+	var header string
+	if format != "" {
+		header = formatHeader(time.Now(), switchLevelI(level), format)
+	} else {
+		header = "\t"
+	}
+	for _, r := range l.register {
+		switch level {
+		case 1:
+			r.trace(fmt.Sprintln(v...), time.Now(), header)
+			break
+		case 2:
+			r.debug(fmt.Sprintln(v...), time.Now(), header)
+			break
+		case 3:
+			r.info(fmt.Sprintln(v...), time.Now(), header)
+			break
+		case 4:
+			r.warn(fmt.Sprintln(v...), time.Now(), header)
+			break
+		case 5:
+			r.error(fmt.Sprintln(v...), time.Now(), header)
+			break
+		default:
+			r.info(fmt.Sprintln(v...), time.Now(), header)
+			break
+		}
+
+	}
+}

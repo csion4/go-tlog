@@ -38,7 +38,7 @@ type stdOutLogger struct {
 func (do *stdOutLogger) trace(v string, t time.Time, h string) string  {
 	if do.level <= Trace {
 		if h == "" {
-			h = formatHeader(t, "trace")
+			h = formatHeader(t, "trace", "")
 		}
 		_, _ = os.Stdout.Write([]byte(h + v))
 	}
@@ -47,7 +47,7 @@ func (do *stdOutLogger) trace(v string, t time.Time, h string) string  {
 func (do *stdOutLogger) debug(v string, t time.Time, h string) string  {
 	if do.level <= Debug {
 		if h == "" {
-			h = formatHeader(t, "debug")
+			h = formatHeader(t, "debug", "")
 		}
 		_, _ = os.Stdout.Write([]byte(h + v))
 	}
@@ -56,7 +56,7 @@ func (do *stdOutLogger) debug(v string, t time.Time, h string) string  {
 func (do *stdOutLogger) info(v string, t time.Time, h string) string  {
 	if do.level <= Info {
 		if h == "" {
-			h = formatHeader(t, "info")
+			h = formatHeader(t, "info", "")
 		}
 		_, _ = os.Stdout.Write([]byte(h + v))
 	}
@@ -65,7 +65,7 @@ func (do *stdOutLogger) info(v string, t time.Time, h string) string  {
 func (do *stdOutLogger) warn(v string, t time.Time, h string) string  {
 	if do.level <= Warn {
 		if h == "" {
-			h = formatHeader(t, "warn")
+			h = formatHeader(t, "warn", "")
 		}
 		_, _ = os.Stderr.Write([]byte(h + v))
 	}
@@ -74,7 +74,7 @@ func (do *stdOutLogger) warn(v string, t time.Time, h string) string  {
 func (do *stdOutLogger) error(v string, t time.Time, h string) string  {
 	if do.level <= Error {
 		if h == "" {
-			h = formatHeader(t, "error")
+			h = formatHeader(t, "error", "")
 		}
 		_, _ = os.Stderr.Write([]byte(h + v))
 	}
