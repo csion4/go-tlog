@@ -1,7 +1,13 @@
 # go-tlog（golang日志组件）
 # 1，简介
-golang实现的日志组件，类似于log4j，支持配置多种日志级别和输出方式；
-# 2，配置文件
+golang日志组件，类似于log4j;
+个人不太喜欢golang当前主流的日志框架类似logrus、zap那种冗余的json格式输出和复杂的代码配置，喜欢java日志框架中的如果配置文件+工厂方法引入+简易的输出方式，所以在写go项目时在没有找到好用的日志框架时选择自己写一个自己喜欢的日志框架，主要借鉴log4j和logback的方式实现的。
+# 2，特性
+1. 支持配置多种日志输出方式，个性化制定日志header；
+2. 支持文件日志最大容量和数量配置；
+3. 支持适配其他框架中的日志整合输出（已提供适配gin、gorm框架）；
+4. 提供panic方法用于处理error已简化golang中恼人的error处理操作；
+# 3，配置文件
 在项目中新建config/tlog.yml配置文件：
 ```
 tlog:
@@ -19,7 +25,7 @@ tlog:
        - console:
            level: debug   # 会覆盖默认level
 ```
-# 3，日志级别
+# 4，日志级别
 支持五种日志输出级别：Trace，Debug，Info，Warn，Error，默认输出级别Info，可自定义指定
 # 5，console输出方式
 控制台输出方式，Trace，Debug，Info日志级别使用的是stdout（标准输出），Warn，Error日志级别使用的是stderr（标准异常输出）
